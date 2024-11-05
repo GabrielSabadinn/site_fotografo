@@ -108,7 +108,7 @@
         password: '',
         isModalOpen: false,
         resetEmail: '',
-        toast: null, // Adicionando uma propriedade para o toast
+        toast: null, 
       };
     },
     created() {
@@ -124,7 +124,7 @@
       },
       async handleLogin() {
         try {
-          const response = await fetch('http://localhost:3000/login', {
+          const response = await fetch('http://localhost:3000/api/management/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -142,17 +142,17 @@
             Cookies.set('refreshToken', data.refreshToken);
             this.$router.push('/admin');
           } else {
-            // Exibindo somente a mensagem de erro retornada pela API
+         
             this.toast.error(data.error);
           }
         } catch (error) {
-          // Apenas mostrando o erro da API
+      
           this.toast.error(error.message);
         }
       },
       async handleRegister() {
         if (!this.email || !this.password) {
-          this.toast.error("Por favor, preencha todos os campos."); // Usando toast
+          this.toast.error("Por favor, preencha todos os campos."); 
           return;
         }
   
@@ -169,11 +169,11 @@
           });
   
           if (response.ok) {
-            this.toast.success("Registro bem-sucedido! Você pode fazer login agora."); // Usando toast
-            this.showLogin(); // Redirecionar para a tela de login
+            this.toast.success("Registro bem-sucedido! Você pode fazer login agora."); 
+            this.showLogin();
           } else {
             const data = await response.json();
-            // Exibindo somente a mensagem de erro retornada pela API
+         
             this.toast.error(data.error);
           }
         } catch (error) {

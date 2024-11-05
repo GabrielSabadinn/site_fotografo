@@ -1,5 +1,5 @@
 <template>
-    <section class="py-10 bg-white"> <!-- Alterado para bg-white -->
+    <section class="py-10 bg-white">
         <div class="max-w-2xl mx-auto p-6 bg-white text-gray-800 rounded-lg shadow-lg">
             <h2 class="text-xl mb-4">Cadastro de Funcionário</h2>
             <form @submit.prevent="cadastrarFuncionario">
@@ -24,13 +24,16 @@
                     required
                     class="mb-4 p-2 border border-gray-300 rounded w-full"
                 />
-                <button type="submit" class="w-full p-2 bg-[rgb(68,64,60)] hover:bg-gray-700 transition duration-300 rounded text-white">Cadastrar Funcionário</button>
+                <button type="submit"  class="w-full p-2 bg-[rgb(68,64,60)] hover:bg-gray-700 transition duration-300 rounded text-white">Cadastrar Funcionário</button>
             </form>
         </div>
     </section>
 </template>
 
 <script>
+import axios from 'axios';
+import { useToast } from 'vue-toastification'; 
+
 export default {
     name: 'FuncionarioSection',
     data() {
@@ -40,18 +43,31 @@ export default {
                 email: '',
                 telefone: '',
             },
+            toast: useToast() 
         };
     },
     methods: {
-        cadastrarFuncionario() {
-            // Lógica para cadastrar funcionário
-            console.log('Funcionário Cadastrado:', this.funcionario);
-            // Limpar formulário
-            this.funcionario = { nome: '', email: '', telefone: '' };
+        async cadastrarFuncionario() {
+            try {
+                const response = await axios.post('http://localhost:3000/api/funcionario/register', this.funcionario);
+                if (response.status === 201) {
+                   
+                    this.toast.success('Funcionário cadastrado com sucesso!');
+                    
+                    this.funcionario = { nome: '', email: '', telefone: '' };
+
+                    
+                    window.location.reload();
+                }
+            } catch (error) {
+              
+                this.toast.error(`Erro ao cadastrar funcionário: ${error.response?.data?.message || error.message}`);
+            }
         },
     },
 };
 </script>
 
 <style scoped>
+
 </style>
